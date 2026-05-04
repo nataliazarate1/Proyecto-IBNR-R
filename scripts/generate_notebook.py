@@ -38,6 +38,22 @@ def build_notebook() -> dict:
         ),
         markdown_cell(
             """
+            ## Estructura general del cuaderno
+
+            El desarrollo del estudio se organiza en módulos que reproducen el flujo lógico de la metodología:
+
+            1. **Definición del experimento.** Se fijan los supuestos del proceso generador de datos, la dimensión del triángulo y la matriz de escenarios.
+            2. **Validación del simulador.** Se verifica que el mecanismo de simulación sea coherente con la teoría propuesta.
+            3. **Construcción de una réplica.** Se muestra cómo se genera el triángulo completo, cómo se observa parcialmente y cómo se incorpora la contaminación.
+            4. **Estimación del IBNR.** Se calculan los factores de desarrollo y el IBNR con cada método.
+            5. **Comparación Monte Carlo.** Se repite el procedimiento en múltiples réplicas y escenarios para obtener métricas de desempeño.
+            6. **Interpretación de resultados.** Se analizan tablas, gráficos, rankings e hipótesis para responder la pregunta de investigación.
+
+            Esta estructura busca que cada bloque responda a una pregunta concreta: qué se simula, cómo se simula, qué se estima, cómo se compara y qué conclusión se obtiene.
+            """
+        ),
+        markdown_cell(
+            """
             ## Planteamiento del estudio
 
             **Pregunta de investigación.** ¿Cuál es el impacto de la presencia de valores atípicos en el desempeño del método Chain-Ladder clásico y de sus versiones robustas en la estimación del IBNR, y bajo qué condiciones los métodos robustos ofrecen mejoras en términos de precisión y estabilidad?
@@ -156,6 +172,36 @@ def build_notebook() -> dict:
             scenario_df
             """
         ),
+        markdown_cell(
+            """
+            La tabla anterior contiene la matriz completa de escenarios. El experimento combina tres dimensiones de contaminación:
+
+            - **Proporción de celdas contaminadas**: `0%`, `5%`, `10%` y `20%`.
+            - **Magnitud del outlier**: multiplicación por `1`, `2`, `5` y `10`. El factor `1` solo aparece en el escenario base, donde no hay contaminación efectiva.
+            - **Ubicación de la contaminación**:
+              - `random`: selección aleatoria dentro de la región observable;
+              - `early`: primer tercio de celdas observadas de cada fila;
+              - `late`: último tercio de celdas observadas de cada fila.
+
+            De esta forma, el estudio no se limita a distinguir entre “con” y “sin” outliers, sino que explora cuánto cambia el desempeño del reserving cuando la contaminación es más frecuente, más intensa o aparece cerca de la frontera observada.
+            """
+        ),
+        code_cell(
+            """
+            scenario_design_df = pd.DataFrame(
+                {
+                    "componente": ["Proporción", "Magnitud", "Ubicación"],
+                    "niveles": ["0%, 5%, 10%, 20%", "x1, x2, x5, x10", "none, random, early, late"],
+                    "interpretación": [
+                        "Determina qué fracción de las celdas observadas es alterada.",
+                        "Determina cuán extremo se vuelve cada valor atípico seleccionado.",
+                        "Determina si la contaminación ocurre al inicio, al final o de forma dispersa en el desarrollo.",
+                    ],
+                }
+            )
+            scenario_design_df
+            """
+        ),
         code_cell(
             """
             parameter_overview = pd.DataFrame(
@@ -171,6 +217,19 @@ def build_notebook() -> dict:
             print("Dispersión phi:", config.dispersion_phi)
             print("Ultimates esperados por año de ocurrencia:", np.round(config.ultimate_means, 2))
             parameter_overview
+            """
+        ),
+        markdown_cell(
+            """
+            El modelo base puede resumirse en la forma
+
+            \[
+            X_{i,j} \sim \text{Gamma}(\alpha_{i,j}, \beta_{i,j}), \qquad
+            E[X_{i,j}] = \mu_i d_j, \qquad
+            \text{Var}(X_{i,j}) = \phi (\mu_i d_j)^2.
+            \]
+
+            Aquí, `\mu_i` representa el nivel esperado último del año de ocurrencia `i`, `d_j` representa la fracción incremental esperada del periodo de desarrollo `j` y `\phi` controla la dispersión relativa. El patrón acumulado fija la forma general del desarrollo, mientras que los `\mu_i` introducen heterogeneidad entre filas. Esta combinación permite generar triángulos plausibles sin perder trazabilidad estadística.
             """
         ),
         markdown_cell(
@@ -246,6 +305,11 @@ def build_notebook() -> dict:
         ),
         markdown_cell(
             """
+            La figura anterior debe leerse de izquierda a derecha. El primer panel muestra el triángulo incremental completo que existe en la simulación antes de ocultar información. El segundo panel muestra el triángulo acumulado efectivamente disponible para estimar, ya contaminado en algunas celdas observadas. El tercer panel corresponde a la zona futura del triángulo incremental; esa zona no se utiliza en la estimación, pero sí define el `IBNR real`, es decir, la referencia verdadera contra la cual se compara cada método.
+            """
+        ),
+        markdown_cell(
+            """
             ## Métodos de estimación
 
             Se comparan cuatro estimadores:
@@ -256,6 +320,30 @@ def build_notebook() -> dict:
             - **Ponderado robusto**: promedio ponderado mediante pesos tipo Huber, con escala robusta por MAD.
 
             La literatura de robustez sugiere que la media posee función de influencia no acotada, mientras que estimadores basados en mediana o ponderaciones robustas pueden limitar el efecto de observaciones extremas. En este estudio esas ideas se trasladan al cálculo de factores de desarrollo.
+            """
+        ),
+        markdown_cell(
+            """
+            En términos operativos, el procedimiento de estimación sigue tres pasos:
+
+            1. Se calculan los ratios individuales de desarrollo
+
+            \[
+            r_{i,j} = \frac{C_{i,j+1}}{C_{i,j}}, \qquad C_{i,j} > 0.
+            \]
+
+            2. Para cada periodo `j`, se resume el conjunto de ratios con una regla distinta según el método:
+
+            \[
+            f_j^{(\text{clas})} = \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}, \qquad
+            f_j^{(\text{med})} = \text{Mediana}(r_{i,j}),
+            \]
+
+            y de forma análoga para la media truncada y el esquema ponderado robusto.
+
+            3. Los factores `f_j` se aplican al último acumulado observado de cada fila para proyectar el ultimate y, por diferencia, obtener el IBNR estimado.
+
+            Así, toda la comparación entre métodos se concentra en una única pieza: la forma en que cada método resume los ratios de desarrollo en presencia de posibles valores atípicos.
             """
         ),
         code_cell(
@@ -285,6 +373,10 @@ def build_notebook() -> dict:
             """
             N_REPLICAS = 1000
             results_df = run_experiment(config, scenarios, n_replicas=N_REPLICAS)
+            results_df["error"] = results_df["estimated_ibnr"] - results_df["true_ibnr"]
+            results_df["absolute_error"] = np.abs(results_df["error"])
+            results_df["percentage_error"] = results_df["error"] / results_df["true_ibnr"]
+            results_df["absolute_percentage_error"] = np.abs(results_df["percentage_error"])
 
             scenario_meta = (
                 results_df.groupby("scenario", as_index=False)
@@ -307,6 +399,30 @@ def build_notebook() -> dict:
             El desempeño se resume mediante sesgo, MSE, RMSE, MAE, MAPE, error porcentual medio y desviación estándar de las estimaciones. Para las métricas basadas en promedios también se reporta una aproximación al error estándar Monte Carlo y un intervalo de confianza normal aproximado. El RMSE permanece como métrica principal de comparación, por su lectura directa en la escala del IBNR.
             """
         ),
+        markdown_cell(
+            """
+            Las métricas principales se interpretan del siguiente modo:
+
+            \[
+            \text{Bias} = \frac{1}{N}\sum_{s=1}^{N}(\widehat{IBNR}_s - IBNR_s),
+            \qquad
+            \text{RMSE} = \sqrt{\frac{1}{N}\sum_{s=1}^{N}(\widehat{IBNR}_s - IBNR_s)^2},
+            \]
+
+            \[
+            \text{MAPE} = \frac{1}{N}\sum_{s=1}^{N}\left|\frac{\widehat{IBNR}_s - IBNR_s}{IBNR_s}\right|,
+            \qquad
+            SD(\widehat{IBNR}) = \sqrt{\frac{1}{N-1}\sum_{s=1}^{N}(\widehat{IBNR}_s - \overline{\widehat{IBNR}})^2}.
+            \]
+
+            - Un **RMSE** menor indica mejor precisión global.
+            - Un **MAPE** menor indica menor error relativo medio.
+            - Un **sesgo** cercano a cero indica ausencia de sobreestimación o subestimación sistemática.
+            - Una **desviación estándar** menor indica mayor estabilidad entre réplicas.
+
+            Por ello, un método favorable no es necesariamente el que minimiza una sola métrica, sino el que presenta un compromiso razonable entre precisión, estabilidad y comportamiento sistemático.
+            """
+        ),
         code_cell(
             """
             metrics_df = compute_method_metrics(results_df).merge(scenario_meta, on="scenario", how="left")
@@ -323,6 +439,39 @@ def build_notebook() -> dict:
             display(dominance_df)
             print("Resumen global por método:")
             display(global_summary)
+            """
+        ),
+        markdown_cell(
+            """
+            Las dos tablas anteriores cumplen funciones distintas. La primera cuenta cuántos escenarios gana cada método cuando el criterio de comparación es el RMSE. La segunda resume su comportamiento promedio en el conjunto total del experimento. La combinación de ambas tablas permite separar dos preguntas distintas: qué método domina globalmente y qué método conserva ventajas en escenarios específicos.
+            """
+        ),
+        code_cell(
+            """
+            environment_summary = (
+                metrics_df.assign(
+                    entorno=lambda df: np.where(df["scenario"].eq("base_sin_contaminacion"), "Sin contaminación", "Escenarios contaminados")
+                )
+                .groupby(["entorno", "method"], as_index=False)
+                .agg(
+                    mean_rmse=("rmse", "mean"),
+                    mean_mape=("mape", "mean"),
+                    mean_sd=("sd_estimates", "mean"),
+                )
+            )
+
+            best_by_scenario = (
+                ranking_df.loc[ranking_df["rank"] == 1, ["scenario", "method", "rmse", "mape", "bias",
+                                                         "contamination_proportion", "contamination_magnitude",
+                                                         "contamination_location"]]
+                .sort_values(["contamination_proportion", "contamination_magnitude", "contamination_location"])
+                .reset_index(drop=True)
+            )
+
+            print("Resumen por entorno:")
+            display(environment_summary)
+            print("Método ganador por escenario:")
+            display(best_by_scenario.head(15))
             """
         ),
         code_cell(
@@ -345,6 +494,11 @@ def build_notebook() -> dict:
 
             plt.tight_layout()
             plt.show()
+            """
+        ),
+        markdown_cell(
+            """
+            La lectura conjunta del gráfico de barras y del mapa de calor permite identificar dos hechos centrales. En primer lugar, el método con mejor desempeño global no siempre coincide con el más eficiente en el escenario base. En segundo lugar, la intensidad de color del mapa de calor permite detectar si el deterioro del método clásico ocurre de forma aislada o si se concentra sistemáticamente en combinaciones de alta proporción y alta magnitud de contaminación.
             """
         ),
         markdown_cell(
@@ -379,6 +533,11 @@ def build_notebook() -> dict:
         ),
         markdown_cell(
             """
+            En esta tabla, una mejora significa que el método robusto reduce el error respecto del método clásico sobre las mismas réplicas. Por ejemplo, si `escenarios_con_mejora_mse` es alto para la mediana, ello indica que la ventaja observada no se debe solo a uno o dos escenarios extremos, sino a un patrón repetido en distintos contextos de contaminación.
+            """
+        ),
+        markdown_cell(
+            """
             ## Sensibilidad por escenario representativo
 
             La combinación de gráficos de distribución y tablas de ranking permite identificar de forma concreta dónde se produce el deterioro del método clásico y bajo qué tipos de contaminación aparecen ventajas robustas.
@@ -400,15 +559,21 @@ def build_notebook() -> dict:
             sns.boxplot(
                 data=results_df.query("scenario in @selected_scenarios"),
                 x="scenario",
-                y="estimated_ibnr",
+                y="percentage_error",
                 hue="method",
             )
-            plt.title("Distribución del IBNR estimado en escenarios seleccionados")
+            plt.axhline(0.0, color="black", linestyle="--", linewidth=1)
+            plt.title("Distribución del error porcentual en escenarios seleccionados")
             plt.xlabel("Escenario")
-            plt.ylabel("IBNR estimado")
+            plt.ylabel("Error porcentual")
             plt.xticks(rotation=45, ha="right")
             plt.tight_layout()
             plt.show()
+            """
+        ),
+        markdown_cell(
+            """
+            En este gráfico, la línea horizontal en cero representa estimación sin error. Valores por encima de cero indican sobreestimación y valores por debajo de cero indican subestimación. La dispersión vertical de cada caja refleja estabilidad: cajas más altas o colas más largas indican mayor variabilidad del método. Esta visualización resulta más informativa que comparar niveles absolutos del IBNR, porque normaliza los errores respecto del tamaño real del IBNR en cada escenario.
             """
         ),
         markdown_cell(
@@ -532,6 +697,47 @@ def build_notebook() -> dict:
             display(hypothesis_table)
             """
         ),
+        code_cell(
+            """
+            clean_winner = best_by_scenario.loc[best_by_scenario["scenario"] == "base_sin_contaminacion", "method"].iloc[0]
+            contaminated_wins = (
+                best_by_scenario.query("scenario != 'base_sin_contaminacion'")
+                .groupby("method")
+                .size()
+                .to_dict()
+            )
+            top_median_advantages = (
+                comparisons_df.query("method == 'median'")
+                .sort_values("delta_mse_mean")
+                .loc[:, ["scenario", "delta_mse_mean", "delta_mape_mean",
+                         "contamination_proportion", "contamination_magnitude", "contamination_location"]]
+                .head(5)
+            )
+
+            key_results_df = pd.DataFrame(
+                [
+                    {"hallazgo": "Método ganador en el escenario base", "resultado": clean_winner},
+                    {
+                        "hallazgo": "Escenarios contaminados ganados por la mediana",
+                        "resultado": contaminated_wins.get("median", 0),
+                    },
+                    {
+                        "hallazgo": "Escenarios contaminados ganados por el método clásico",
+                        "resultado": contaminated_wins.get("classical", 0),
+                    },
+                    {
+                        "hallazgo": "Método con menor RMSE promedio global",
+                        "resultado": global_summary.iloc[0]["method"],
+                    },
+                ]
+            )
+
+            print("Hallazgos principales del experimento Gamma:")
+            display(key_results_df)
+            print("Escenarios con mayor ventaja de la mediana frente al método clásico:")
+            display(top_median_advantages)
+            """
+        ),
         markdown_cell(
             """
             La evidencia obtenida muestra un patrón robusto. En datos limpios o con contaminación leve, el método clásico conserva ventajas de eficiencia. Sin embargo, conforme aumentan la magnitud y la frecuencia de la contaminación, la mediana se convierte en la opción más estable y precisa. En esta implementación, la media truncada no confirma la hipótesis de equilibrio robustez-eficiencia y la versión ponderada no domina de forma sistemática. Ese resultado no invalida el diseño; por el contrario, aporta una conclusión empírica relevante: no toda robustificación heurística resulta efectiva en triángulos con tamaños muestrales decrecientes por periodo de desarrollo.
@@ -560,6 +766,42 @@ def build_notebook() -> dict:
             display(dominance_lognormal)
             """
         ),
+        code_cell(
+            """
+            gamma_vs_lognormal = (
+                global_summary.loc[:, ["method", "mean_rmse", "mean_mape"]]
+                .rename(columns={"mean_rmse": "gamma_mean_rmse", "mean_mape": "gamma_mean_mape"})
+                .merge(
+                    global_summary_lognormal.loc[:, ["method", "mean_rmse", "mean_mape"]]
+                    .rename(columns={"mean_rmse": "lognormal_mean_rmse", "mean_mape": "lognormal_mean_mape"}),
+                    on="method",
+                    how="inner",
+                )
+                .sort_values("gamma_mean_rmse")
+                .reset_index(drop=True)
+            )
+            gamma_vs_lognormal
+            """
+        ),
+        markdown_cell(
+            """
+            La comparación anterior permite verificar si el orden relativo entre métodos cambia cuando la distribución subyacente presenta colas más pesadas. Si el método ganador se mantiene, la conclusión principal del estudio resulta más robusta; si cambia, ello indicaría que parte del hallazgo depende de la forma específica del proceso generador de datos.
+            """
+        ),
+        markdown_cell(
+            """
+            ## Conclusiones del experimento
+
+            El conjunto de resultados permite extraer cuatro conclusiones principales:
+
+            1. **El método clásico conserva eficiencia en datos limpios o débilmente contaminados.** Esto es consistente con la idea de que la robustificación puede implicar un costo cuando no hay observaciones extremas influyentes.
+            2. **La mediana ofrece la respuesta más consistente cuando la contaminación aumenta en magnitud o frecuencia.** En el diseño implementado, este método concentra la mayor cantidad de victorias por escenario y exhibe el mejor desempeño global en los escenarios contaminados.
+            3. **La media truncada y el método ponderado no dominan de forma general.** En particular, la media truncada no confirma la hipótesis de equilibrio robustez-eficiencia bajo la parametrización considerada, mientras que el método ponderado mejora en algunos contextos, pero no alcanza una ventaja sistemática.
+            4. **La conclusión principal es estable bajo la sensibilidad Lognormal.** El patrón general observado con Gamma no desaparece al introducir colas más pesadas, lo que fortalece la interpretación sustantiva del experimento.
+
+            En términos de la pregunta de investigación, la evidencia sugiere que los métodos robustos sí ofrecen mejoras frente al Chain-Ladder clásico, pero no de manera uniforme: la ventaja aparece principalmente cuando los outliers son lo suficientemente severos o frecuentes como para distorsionar los factores de desarrollo clásicos.
+            """
+        ),
         markdown_cell(
             """
             ## Exportación de resultados
@@ -570,14 +812,20 @@ def build_notebook() -> dict:
         code_cell(
             """
             export_map = {
+                "scenario_design.csv": scenario_design_df,
                 "metrics_gamma_1000rep.csv": metrics_df,
                 "ranking_gamma_1000rep.csv": ranking_df,
                 "comparisons_vs_classical_gamma_1000rep.csv": comparisons_df,
+                "comparison_summary_gamma_1000rep.csv": comparison_summary,
                 "global_summary_gamma_1000rep.csv": global_summary,
+                "environment_summary_gamma_1000rep.csv": environment_summary,
+                "best_by_scenario_gamma_1000rep.csv": best_by_scenario,
+                "key_results_gamma_1000rep.csv": key_results_df,
                 "method_dominance_gamma_1000rep.csv": dominance_df,
                 "hypothesis_assessment_gamma_1000rep.csv": hypothesis_table,
                 "global_summary_lognormal_400rep.csv": global_summary_lognormal,
                 "method_dominance_lognormal_400rep.csv": dominance_lognormal,
+                "gamma_vs_lognormal_summary.csv": gamma_vs_lognormal,
             }
 
             exported = []
