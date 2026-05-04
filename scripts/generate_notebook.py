@@ -223,13 +223,15 @@ def build_notebook() -> dict:
             """
             El modelo base puede resumirse en la forma
 
-            \[
-            X_{i,j} \sim \text{Gamma}(\alpha_{i,j}, \beta_{i,j}), \qquad
-            E[X_{i,j}] = \mu_i d_j, \qquad
-            \text{Var}(X_{i,j}) = \phi (\mu_i d_j)^2.
-            \]
+            $$
+            \\begin{aligned}
+            X_{i,j} &\\sim \\mathrm{Gamma}(\\alpha_{i,j}, \\beta_{i,j}), \\\\
+            \\mathbb{E}[X_{i,j}] &= \\mu_i d_j, \\\\
+            \\mathrm{Var}(X_{i,j}) &= \\phi (\\mu_i d_j)^2.
+            \\end{aligned}
+            $$
 
-            Aquí, `\mu_i` representa el nivel esperado último del año de ocurrencia `i`, `d_j` representa la fracción incremental esperada del periodo de desarrollo `j` y `\phi` controla la dispersión relativa. El patrón acumulado fija la forma general del desarrollo, mientras que los `\mu_i` introducen heterogeneidad entre filas. Esta combinación permite generar triángulos plausibles sin perder trazabilidad estadística.
+            Aquí, $\\mu_i$ representa el nivel esperado último del año de ocurrencia $i$, $d_j$ representa la fracción incremental esperada del periodo de desarrollo $j$ y $\\phi$ controla la dispersión relativa. El patrón acumulado fija la forma general del desarrollo, mientras que los $\\mu_i$ introducen heterogeneidad entre filas. Esta combinación permite generar triángulos plausibles sin perder trazabilidad estadística.
             """
         ),
         markdown_cell(
@@ -328,18 +330,28 @@ def build_notebook() -> dict:
 
             1. Se calculan los ratios individuales de desarrollo
 
-            \[
-            r_{i,j} = \frac{C_{i,j+1}}{C_{i,j}}, \qquad C_{i,j} > 0.
-            \]
+            $$
+            r_{i,j} = \\frac{C_{i,j+1}}{C_{i,j}}, \\qquad C_{i,j} > 0.
+            $$
 
             2. Para cada periodo `j`, se resume el conjunto de ratios con una regla distinta según el método:
 
-            \[
-            f_j^{(\text{clas})} = \frac{\sum_i C_{i,j+1}}{\sum_i C_{i,j}}, \qquad
-            f_j^{(\text{med})} = \text{Mediana}(r_{i,j}),
-            \]
+            $$
+            \\begin{aligned}
+            f_j^{(\\mathrm{clas})} &= \\frac{\\sum_i C_{i,j+1}}{\\sum_i C_{i,j}}, \\\\
+            f_j^{(\\mathrm{med})} &= \\operatorname{Med}(r_{i,j}), \\\\
+            f_j^{(\\mathrm{trim})} &= \\operatorname{TrimMean}_{10\\%}(r_{i,j}), \\\\
+            f_j^{(\\mathrm{pond})} &= \\frac{\\sum_i w_{i,j} r_{i,j}}{\\sum_i w_{i,j}}.
+            \\end{aligned}
+            $$
 
-            y de forma análoga para la media truncada y el esquema ponderado robusto.
+            En la versión ponderada, los pesos robustos se construyen a partir de la distancia del ratio a su centro robusto:
+
+            $$
+            w_{i,j} = \\min\\left(1, \\frac{k}{\\left|z_{i,j}\\right| + \\varepsilon}\\right),
+            \\qquad
+            z_{i,j} = \\frac{r_{i,j} - \\widetilde{r}_j}{\\operatorname{MAD}(r_{i,j})}.
+            $$
 
             3. Los factores `f_j` se aplican al último acumulado observado de cada fila para proyectar el ultimate y, por diferencia, obtener el IBNR estimado.
 
@@ -403,17 +415,19 @@ def build_notebook() -> dict:
             """
             Las métricas principales se interpretan del siguiente modo:
 
-            \[
-            \text{Bias} = \frac{1}{N}\sum_{s=1}^{N}(\widehat{IBNR}_s - IBNR_s),
-            \qquad
-            \text{RMSE} = \sqrt{\frac{1}{N}\sum_{s=1}^{N}(\widehat{IBNR}_s - IBNR_s)^2},
-            \]
+            $$
+            \\begin{aligned}
+            \\mathrm{Bias} &= \\frac{1}{N}\\sum_{s=1}^{N}(\\widehat{IBNR}_s - IBNR_s), \\\\
+            \\mathrm{RMSE} &= \\sqrt{\\frac{1}{N}\\sum_{s=1}^{N}(\\widehat{IBNR}_s - IBNR_s)^2}.
+            \\end{aligned}
+            $$
 
-            \[
-            \text{MAPE} = \frac{1}{N}\sum_{s=1}^{N}\left|\frac{\widehat{IBNR}_s - IBNR_s}{IBNR_s}\right|,
-            \qquad
-            SD(\widehat{IBNR}) = \sqrt{\frac{1}{N-1}\sum_{s=1}^{N}(\widehat{IBNR}_s - \overline{\widehat{IBNR}})^2}.
-            \]
+            $$
+            \\begin{aligned}
+            \\mathrm{MAPE} &= \\frac{1}{N}\\sum_{s=1}^{N}\\left|\\frac{\\widehat{IBNR}_s - IBNR_s}{IBNR_s}\\right|, \\\\
+            \\operatorname{SD}(\\widehat{IBNR}) &= \\sqrt{\\frac{1}{N-1}\\sum_{s=1}^{N}(\\widehat{IBNR}_s - \\overline{\\widehat{IBNR}})^2}.
+            \\end{aligned}
+            $$
 
             - Un **RMSE** menor indica mejor precisión global.
             - Un **MAPE** menor indica menor error relativo medio.
