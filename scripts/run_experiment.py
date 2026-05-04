@@ -10,7 +10,8 @@ if str(SRC) not in sys.path:
     sys.path.append(str(SRC))
 
 from ibnr_project.config import build_default_config, build_default_scenarios  # noqa: E402
-from ibnr_project.evaluation import compute_method_metrics, rank_methods_within_scenario  # noqa: E402
+from ibnr_project.diagnostics import summarize_method_dominance  # noqa: E402
+from ibnr_project.evaluation import compare_methods_to_baseline, compute_method_metrics, rank_methods_within_scenario  # noqa: E402
 from ibnr_project.experiment import build_global_summary, run_experiment  # noqa: E402
 
 
@@ -29,6 +30,8 @@ def main() -> None:
     results = run_experiment(config, scenarios, n_replicas=args.replicas)
     metrics = compute_method_metrics(results)
     ranking = rank_methods_within_scenario(metrics, metric="rmse")
+    comparisons = compare_methods_to_baseline(results, baseline="classical")
+    dominance = summarize_method_dominance(ranking)
     global_summary = build_global_summary(metrics)
 
     output_dir = ROOT / args.output_dir
@@ -38,6 +41,8 @@ def main() -> None:
     results.to_csv(output_dir / f"raw_results_{suffix}.csv", index=False)
     metrics.to_csv(output_dir / f"metrics_{suffix}.csv", index=False)
     ranking.to_csv(output_dir / f"ranking_{suffix}.csv", index=False)
+    comparisons.to_csv(output_dir / f"comparisons_vs_classical_{suffix}.csv", index=False)
+    dominance.to_csv(output_dir / f"method_dominance_{suffix}.csv", index=False)
     global_summary.to_csv(output_dir / f"global_summary_{suffix}.csv", index=False)
 
     print(f"Results exported to {output_dir}")

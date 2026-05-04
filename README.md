@@ -10,6 +10,7 @@ Este repositorio contiene una implementacion reproducible en Python para compara
 - `src/ibnr_project/config.py`: configuraciones y escenarios.
 - `src/ibnr_project/simulation.py`: generacion del triangulo, mascara observada y contaminacion.
 - `src/ibnr_project/experiment.py`: motor Monte Carlo y resumen global.
+- `src/ibnr_project/diagnostics.py`: diagnosticos de estructura, convergencia y dominancia de metodos.
 - `src/ibnr_project/methods.py`: estimadores Chain-Ladder clasico y robustos.
 - `src/ibnr_project/evaluation.py`: metricas de desempeno y tablas resumen.
 - `src/ibnr_project/validation.py`: pruebas de coherencia estadistica y logica.
@@ -31,6 +32,16 @@ pip install -r requirements.txt
 ```bash
 python scripts/run_experiment.py --replicas 1000 --distribution gamma
 ```
+
+## Resultados exportados
+
+La corrida principal exporta, entre otros, los siguientes archivos a `results/`:
+
+- `metrics_<distribucion>_<replicas>rep.csv`
+- `ranking_<distribucion>_<replicas>rep.csv`
+- `comparisons_vs_classical_<distribucion>_<replicas>rep.csv`
+- `method_dominance_<distribucion>_<replicas>rep.csv`
+- `global_summary_<distribucion>_<replicas>rep.csv`
 
 ## Nota metodologica
 

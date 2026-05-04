@@ -59,11 +59,23 @@ def _eligible_cells(mask: np.ndarray, location: str) -> np.ndarray:
     if location == "random":
         return coords
     if location == "early":
-        cutoff = max(1, int(np.ceil(mask.shape[1] / 3)))
-        return coords[coords[:, 1] < cutoff]
+        selected = []
+        for row in range(mask.shape[0]):
+            observed_cols = np.where(mask[row])[0]
+            if observed_cols.size == 0:
+                continue
+            n_local = max(1, int(np.ceil(observed_cols.size / 3)))
+            selected.extend((row, int(col)) for col in observed_cols[:n_local])
+        return np.array(selected, dtype=int)
     if location == "late":
-        cutoff = int(np.floor(2 * mask.shape[1] / 3))
-        return coords[coords[:, 1] >= cutoff]
+        selected = []
+        for row in range(mask.shape[0]):
+            observed_cols = np.where(mask[row])[0]
+            if observed_cols.size == 0:
+                continue
+            n_local = max(1, int(np.ceil(observed_cols.size / 3)))
+            selected.extend((row, int(col)) for col in observed_cols[-n_local:])
+        return np.array(selected, dtype=int)
     if location == "none":
         return np.empty((0, 2), dtype=int)
     raise ValueError(f"Ubicacion no soportada: {location}")

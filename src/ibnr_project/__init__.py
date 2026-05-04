@@ -5,7 +5,9 @@ from .config import (
     build_default_scenarios,
     clone_config,
 )
+from .diagnostics import build_link_ratio_count_table, compute_running_statistics, summarize_method_dominance
 from .evaluation import compute_method_metrics, rank_methods_within_scenario, summarize_results_by_scenario
+from .evaluation import compare_methods_to_baseline
 from .experiment import build_global_summary, run_experiment
 from .methods import estimate_ibnr_all_methods
 from .simulation import (
@@ -25,7 +27,11 @@ __all__ = [
     "build_default_config",
     "build_default_scenarios",
     "clone_config",
+    "build_link_ratio_count_table",
+    "compute_running_statistics",
+    "summarize_method_dominance",
     "compute_method_metrics",
+    "compare_methods_to_baseline",
     "rank_methods_within_scenario",
     "summarize_results_by_scenario",
     "build_global_summary",
