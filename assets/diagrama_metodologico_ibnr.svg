@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120">
+  <defs>
+    <style>
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #17324d; }
+      .subtitle { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #425466; }
+      .box-title { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #17324d; }
+      .box-text { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #283846; }
+      .small-text { font: 400 16px 'Segoe UI', Arial, sans-serif; fill: #425466; }
+      .arrow-label { font: 600 16px 'Segoe UI', Arial, sans-serif; fill: #5b6b79; }
+      .stroke-main { stroke: #17324d; stroke-width: 3; fill: none; }
+      .stroke-soft { stroke: #55738e; stroke-width: 2.5; fill: none; }
+      .box-main { fill: #eef4f9; stroke: #17324d; stroke-width: 3; rx: 20; ry: 20; }
+      .box-accent { fill: #f8fbfd; stroke: #55738e; stroke-width: 2.5; rx: 20; ry: 20; }
+      .box-valid { fill: #eef8f2; stroke: #2f7d55; stroke-width: 3; rx: 20; ry: 20; }
+      .box-study { fill: #f9f2ea; stroke: #a55f20; stroke-width: 3; rx: 20; ry: 20; }
+      .box-final { fill: #f3eefb; stroke: #6746a6; stroke-width: 3; rx: 20; ry: 20; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#17324d"/>
+    </marker>
+    <marker id="arrow-soft" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#55738e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="1120" fill="#ffffff"/>
+
+  <text x="800" y="60" text-anchor="middle" class="title">Diagrama metodologico del estudio IBNR</text>
+  <text x="800" y="92" text-anchor="middle" class="subtitle">
+    Flujo general del proyecto y separacion entre validacion del simulador y experimento principal
+  </text>
+
+  <rect x="390" y="130" width="820" height="120" class="box-main"/>
+  <text x="800" y="175" text-anchor="middle" class="box-title">1. Planteamiento del estudio</text>
+  <text x="800" y="208" text-anchor="middle" class="box-text">
+    Pregunta de investigacion, objetivo general, hipotesis y criterio comparativo
+  </text>
+  <text x="800" y="234" text-anchor="middle" class="small-text">
+    Idea central: comparar Chain-Ladder clasico vs variantes robustas bajo contaminacion controlada
+  </text>
+
+  <path d="M 800 250 L 800 305" class="stroke-main" marker-end="url(#arrow)"/>
+
+  <rect x="280" y="310" width="1040" height="150" class="box-accent"/>
+  <text x="800" y="355" text-anchor="middle" class="box-title">2. Configuracion experimental comun</text>
+  <text x="800" y="388" text-anchor="middle" class="box-text">
+    Triangulos 10 x 10, patron de desarrollo, Gamma como caso base, sensibilidad Lognormal
+  </text>
+  <text x="800" y="416" text-anchor="middle" class="box-text">
+    Escenarios de contaminacion: proporcion (0%, 5%, 10%, 20%), magnitud (x1, x2, x5, x10),
+  </text>
+  <text x="800" y="442" text-anchor="middle" class="box-text">
+    ubicacion (none, random, early, late)
+  </text>
+
+  <path d="M 800 460 L 800 500" class="stroke-main" marker-end="url(#arrow)"/>
+
+  <text x="520" y="525" text-anchor="middle" class="arrow-label">Notebook de apoyo tecnico</text>
+  <text x="1080" y="525" text-anchor="middle" class="arrow-label">Notebook central de la tesis</text>
+
+  <path d="M 800 500 C 800 540, 520 540, 520 575" class="stroke-soft" marker-end="url(#arrow-soft)"/>
+  <path d="M 800 500 C 800 540, 1080 540, 1080 575" class="stroke-soft" marker-end="url(#arrow-soft)"/>
+
+  <rect x="120" y="580" width="800" height="270" class="box-valid"/>
+  <text x="520" y="625" text-anchor="middle" class="box-title">3A. Validacion del simulador</text>
+  <text x="520" y="660" text-anchor="middle" class="box-text">
+    Objetivo: demostrar que el proceso generador y el algoritmo estan bien implementados
+  </text>
+  <text x="520" y="698" text-anchor="middle" class="box-text">
+    - Medias empiricas vs medias teoricas
+  </text>
+  <text x="520" y="726" text-anchor="middle" class="box-text">
+    - Coherencia entre incremental y acumulado
+  </text>
+  <text x="520" y="754" text-anchor="middle" class="box-text">
+    - Definicion correcta de la mascara observada y del IBNR real
+  </text>
+  <text x="520" y="782" text-anchor="middle" class="box-text">
+    - Contaminacion solo en la region observable
+  </text>
+  <text x="520" y="810" text-anchor="middle" class="box-text">
+    - Recuperacion exacta del IBNR en un caso determinista sin ruido
+  </text>
+
+  <rect x="940" y="580" width="540" height="360" class="box-study"/>
+  <text x="1210" y="625" text-anchor="middle" class="box-title">3B. Experimento principal</text>
+  <text x="1210" y="660" text-anchor="middle" class="box-text">
+    Objetivo: comparar el desempeno de los metodos bajo escenarios contaminados
+  </text>
+  <text x="1210" y="698" text-anchor="middle" class="box-text">
+    1. Generar triangulo incremental completo
+  </text>
+  <text x="1210" y="726" text-anchor="middle" class="box-text">
+    2. Construir acumulado y definir region observada
+  </text>
+  <text x="1210" y="754" text-anchor="middle" class="box-text">
+    3. Calcular IBNR verdadero en la region futura
+  </text>
+  <text x="1210" y="782" text-anchor="middle" class="box-text">
+    4. Contaminar solo la parte observada
+  </text>
+  <text x="1210" y="810" text-anchor="middle" class="box-text">
+    5. Estimar con cuatro metodos: clasico, mediana, truncado, ponderado
+  </text>
+  <text x="1210" y="838" text-anchor="middle" class="box-text">
+    6. Repetir 1000 replicas por escenario
+  </text>
+  <text x="1210" y="866" text-anchor="middle" class="box-text">
+    7. Calcular metricas, rankings y comparaciones pareadas
+  </text>
+  <text x="1210" y="900" text-anchor="middle" class="small-text">
+    El notebook principal es el que se debe usar en la sustentacion
+  </text>
+
+  <path d="M 520 850 L 520 900 C 520 950, 800 950, 800 980" class="stroke-soft" marker-end="url(#arrow-soft)"/>
+  <path d="M 1210 940 L 1210 980 C 1210 1010, 800 1010, 800 980" class="stroke-soft" marker-end="url(#arrow-soft)"/>
+
+  <rect x="320" y="980" width="960" height="110" class="box-final"/>
+  <text x="800" y="1025" text-anchor="middle" class="box-title">4. Sintesis final para documento y presentacion</text>
+  <text x="800" y="1058" text-anchor="middle" class="box-text">
+    Evaluacion de hipotesis, tablas resumen por escenario y metodo, sensibilidad Lognormal y conclusiones
+  </text>
+  <text x="800" y="1082" text-anchor="middle" class="small-text">
+    Mensaje central: cuando la contaminacion aumenta, la mediana supera al metodo clasico con mayor consistencia
+  </text>
+</svg>
