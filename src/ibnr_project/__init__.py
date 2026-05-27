@@ -6,8 +6,15 @@ from .config import (
     clone_config,
 )
 from .diagnostics import build_link_ratio_count_table, compute_running_statistics, summarize_method_dominance
-from .evaluation import compute_method_metrics, rank_methods_within_scenario, summarize_results_by_scenario
-from .evaluation import compare_methods_to_baseline
+from .evaluation import (
+    METHOD_LABELS,
+    assess_primary_hypothesis,
+    compare_methods_to_baseline,
+    compute_method_metrics,
+    rank_methods_within_scenario,
+    summarize_family_results,
+    summarize_results_by_scenario,
+)
 from .experiment import build_global_summary, run_experiment
 from .methods import estimate_ibnr_all_methods
 from .simulation import (
@@ -30,9 +37,12 @@ __all__ = [
     "build_link_ratio_count_table",
     "compute_running_statistics",
     "summarize_method_dominance",
+    "METHOD_LABELS",
+    "assess_primary_hypothesis",
     "compute_method_metrics",
     "compare_methods_to_baseline",
     "rank_methods_within_scenario",
+    "summarize_family_results",
     "summarize_results_by_scenario",
     "build_global_summary",
     "run_experiment",
