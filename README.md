@@ -4,17 +4,19 @@ Este repositorio contiene el trabajo final sobre estimación del IBNR bajo datos
 
 ## Objetivo del proyecto
 
-Analizar en qué condiciones los métodos robustos mejoran la estimación del IBNR cuando la parte observada del triángulo contiene valores atípicos. Para ello se comparan cuatro métodos sobre los mismos escenarios simulados:
+Identificar en qué condiciones los métodos robustos mejoran la estimación del IBNR cuando la parte observada del triángulo contiene valores atípicos.
+
+Los métodos comparados son:
 
 - Chain-Ladder clásico
-- variante con mediana
-- variante con media truncada
-- variante ponderada robusta
+- Variante con mediana
+- Variante con media truncada
+- Variante ponderada robusta
 
 ## Estructura del repositorio
 
 - `cuadernos/`
-  - `estudio_ibnr_chain_ladder_robusto.ipynb`: cuaderno principal del estudio.
+  - `estudio_ibnr_chain_ladder_robusto.ipynb`: cuaderno principal del estudio, con metodología, resultados, tablas y gráficas.
   - `validacion_simulador_ibnr.ipynb`: cuaderno de validación del simulador.
 - `fuente/proyecto_ibnr/`
   - `configuracion.py`: configuración base y definición de escenarios.
@@ -26,13 +28,18 @@ Analizar en qué condiciones los métodos robustos mejoran la estimación del IB
   - `validacion.py`: verificaciones previas del simulador.
 - `guiones/`
   - `ejecutar_experimento.py`: corre el experimento y exporta resultados.
-  - `generar_cuaderno.py`: limpia o normaliza los cuadernos.
-  - `construir_recursos_presentacion.py`: genera las figuras usadas en la sustentación.
-- `resultados/`: salidas del estudio en formato CSV.
-- `presentacion/`
-  - `sustentacion_ibnr_usta.tex`: presentación en Beamer.
-  - `figuras/`: recursos gráficos usados en la sustentación.
-- `recursos/`: material gráfico base del proyecto.
+- `resultados/`: archivos CSV con las salidas del estudio.
+- `requirements.txt`: dependencias principales del proyecto.
+
+## Herramientas utilizadas
+
+- Python 3
+- Jupyter Notebook
+- NumPy
+- pandas
+- matplotlib
+- seaborn
+- nbformat
 
 ## Instalación
 
@@ -70,26 +77,26 @@ Cada corrida genera archivos como los siguientes en `resultados/`:
 - `resumen_desviacion_robusta_gamma_1000replicas.csv`
 - `evaluacion_hipotesis_gamma_1000replicas.csv`
 
-También se generan los análogos para la sensibilidad Lognormal.
-
-## Recursos para la presentación
-
-Para regenerar las figuras de la sustentación:
-
-```bash
-python guiones/construir_recursos_presentacion.py
-```
-
-Las imágenes se guardan en `presentacion/figuras/`.
-
-## Cuadernos
-
-Si deseas dejar un cuaderno limpio, sin salidas:
-
-```bash
-python guiones/generar_cuaderno.py --limpiar-salidas
-```
+También se generan los archivos análogos para la sensibilidad Lognormal.
 
 ## Nota metodológica
 
-La simulación base utiliza una distribución Gamma y la sensibilidad se evalúa con una distribución Lognormal. La contaminación se introduce de manera positiva, multiplicativa y controlada solo en la región observada del triángulo, de modo que el IBNR real de la zona futura permanezca intacto y sirva como referencia para medir error, precisión y estabilidad.
+La simulación base utiliza una distribución Gamma y la sensibilidad se evalúa con una distribución Lognormal. La contaminación se introduce de manera positiva, multiplicativa y controlada solo en la región observada del triángulo, de modo que el IBNR real de la zona futura permanezca intacto y sirva como referencia para medir error y estabilidad.
+
+## Fuentes principales
+
+### Base actuarial y estocástica
+
+- Mack, T. (1993). *Distribution-Free Calculation of the Standard Error of Chain-Ladder Reserve Estimates*.
+- England, P. D. y Verrall, R. J. (2002). *Stochastic Claims Reserving in General Insurance*.
+- Wüthrich, M. V. y Merz, M. (2008). *Stochastic Claims Reserving Methods in Insurance*.
+- Harnau, J. (2018). *Misspecification Tests for Log-Normal and Over-Dispersed Poisson Chain-Ladder Models*.
+
+### Robustez y outliers
+
+- Verdonck, T., Van Wouwe, M. y Dhaene, J. (2009). *Robustification of the Chain-Ladder Method*.
+- Verdonck, T. y Debruyne, M. (2011). *The Influence of Individual Claims on the Chain-Ladder Estimates*.
+- Pitselis, G., Grigoriadou, V. y Badounas, I. (2015). *Robust Loss Reserving in a Log-Linear Model*.
+- Peremans, K., Van Aelst, S. y Verdonck, T. (2018). *A Robust General Multivariate Chain Ladder Method*.
+- Avanzi, B., Richman, R. y Wong, B. (2023). *Detection and Treatment of Outliers for Multivariate Robust Loss Reserving*.
+- Avanzi, B., Lavender, A., Taylor, G. y Wong, B. (2024). *On the Impact of Outliers in Loss Reserving*.

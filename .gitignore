@@ -7,3 +7,7 @@ cuadernos/.ipynb_checkpoints/
 
 salidas/
 tmp_revision/
+recursos/
+presentacion/
+guiones/generar_cuaderno.py
+guiones/construir_recursos_presentacion.py
