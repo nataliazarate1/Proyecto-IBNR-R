@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 
 .jupyter_runtime/
+.tmp_jupyter_runtime/
 cuadernos/.ipynb_checkpoints/
 
 salidas/
