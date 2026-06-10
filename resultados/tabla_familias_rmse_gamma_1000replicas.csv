@@ -1,0 +1,11 @@
+Familia,Método con mejor promedio,RMSE promedio,Método con más escenarios ganados,Frecuencia ganadora
+Sin contaminación,Clásico,600.42,Clásico,1/1
+Contaminación del 5%,Mediana,1333.85,Mediana,7/9
+Contaminación del 10%,Mediana,1907.56,Clásico,5/9
+Contaminación del 20%,Mediana,2471.54,Mediana,6/9
+Outliers ×2,Mediana,765.2,Clásico,7/9
+Outliers ×5,Mediana,1668.77,Mediana,7/9
+Outliers ×10,Mediana,3278.99,Mediana,8/9
+Contaminación temprana,Mediana,1620.85,Clásico,6/9
+Contaminación tardía,Mediana,1933.63,Mediana,6/9
+Contaminación aleatoria,Mediana,2158.47,Mediana,8/9

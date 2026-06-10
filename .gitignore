@@ -1,9 +1,7 @@
-.ipynb_checkpoints/
 __pycache__/
 *.pyc
-results/
-figures/
+
 .jupyter_runtime/
-resultados_replicas_ibnr.csv
-resumen_metricas_ibnr.csv
-mejor_metodo_por_escenario.csv
+cuadernos/.ipynb_checkpoints/
+
+salidas/

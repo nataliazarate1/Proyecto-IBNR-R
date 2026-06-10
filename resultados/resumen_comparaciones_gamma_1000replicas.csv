@@ -1,0 +1,4 @@
+metodo,escenarios_con_mejora_mse,escenarios_con_deterioro_mse,escenarios_con_mejora_mape,delta_mse_promedio,delta_mape_promedio
+mediana,12,4,16,-3606242.603594496,-0.14858447138377778
+ponderado,5,18,7,-1508341.3861234088,-0.04109575528171653
+truncada,0,28,0,25424987.567296244,0.6266411907093964

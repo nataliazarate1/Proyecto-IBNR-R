@@ -1,0 +1,11 @@
+familia,codigo_metodo_mejor_promedio,metodo_mejor_promedio,rmse_promedio,mape_promedio,desviacion_estandar_promedio,codigo_metodo_mas_victorias,metodo_con_mas_victorias,victorias_escenario,total_escenarios,frecuencia_ganadora
+Sin contaminación,clasico,Clásico,600.42,0.275,540.01,clasico,Clásico,1,1,1/1
+Contaminación del 5%,mediana,Mediana,1333.85,0.437,1262.43,mediana,Mediana,7,9,7/9
+Contaminación del 10%,mediana,Mediana,1907.56,0.595,1775.73,clasico,Clásico,5,9,5/9
+Contaminación del 20%,mediana,Mediana,2471.54,0.877,2163.99,mediana,Mediana,6,9,6/9
+Outliers x2,mediana,Mediana,765.2,0.343,698.3,clasico,Clásico,7,9,7/9
+Outliers x5,mediana,Mediana,1668.77,0.579,1523.5,mediana,Mediana,7,9,7/9
+Outliers x10,mediana,Mediana,3278.99,0.988,2980.36,mediana,Mediana,8,9,8/9
+Contaminación temprana,mediana,Mediana,1620.85,0.539,1526.86,clasico,Clásico,6,9,6/9
+Contaminación tardía,mediana,Mediana,1933.63,0.618,1760.9,mediana,Mediana,6,9,6/9
+Contaminación aleatoria,mediana,Mediana,2158.47,0.752,1914.39,mediana,Mediana,8,9,8/9

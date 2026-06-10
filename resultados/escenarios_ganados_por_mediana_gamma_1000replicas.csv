@@ -1,0 +1,18 @@
+Escenario,RMSE de la mediana,Proporción,Magnitud,Ubicación
+5% · ×2 · Aleatoria,742.5112781635762,0.05,2.0,aleatoria
+5% · ×5 · Aleatoria,1276.244012378151,0.05,5.0,aleatoria
+5% · ×5 · Tardía,1170.44259298338,0.05,5.0,tardia
+5% · ×5 · Temprana,1078.391665791124,0.05,5.0,temprana
+5% · ×10 · Aleatoria,2485.8719055918914,0.05,10.0,aleatoria
+5% · ×10 · Tardía,2095.57624041152,0.05,10.0,tardia
+5% · ×10 · Temprana,1815.873658718844,0.05,10.0,temprana
+10% · ×5 · Aleatoria,1696.692478412989,0.1,5.0,aleatoria
+10% · ×5 · Tardía,1663.5213670861492,0.1,5.0,tardia
+10% · ×10 · Aleatoria,3523.1186364121363,0.1,10.0,aleatoria
+10% · ×10 · Tardía,3849.432584408806,0.1,10.0,tardia
+20% · ×2 · Aleatoria,854.4240135537954,0.2,2.0,aleatoria
+20% · ×5 · Aleatoria,2339.6075058950523,0.2,5.0,aleatoria
+20% · ×5 · Tardía,2169.961448089779,0.2,5.0,tardia
+20% · ×10 · Aleatoria,5738.278651861962,0.2,10.0,aleatoria
+20% · ×10 · Tardía,4164.295034657161,0.2,10.0,tardia
+20% · ×10 · Temprana,3344.515751769414,0.2,10.0,temprana

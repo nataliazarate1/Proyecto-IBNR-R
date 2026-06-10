@@ -1,0 +1,11 @@
+Familia,Método con mejor promedio,RMSE promedio,Método con más escenarios ganados,Frecuencia ganadora
+Sin contaminación,Mediana,581.9,Mediana,1/1
+Contaminación del 5%,Mediana,1302.2,Mediana,6/9
+Contaminación del 10%,Mediana,1710.84,Mediana,9/9
+Contaminación del 20%,Mediana,2281.44,Mediana,8/9
+Outliers ×2,Mediana,742.6,Mediana,8/9
+Outliers ×5,Mediana,1570.47,Mediana,7/9
+Outliers ×10,Mediana,2981.41,Mediana,8/9
+Contaminación temprana,Mediana,1568.85,Mediana,8/9
+Contaminación tardía,Mediana,1818.15,Mediana,7/9
+Contaminación aleatoria,Mediana,1907.48,Mediana,8/9

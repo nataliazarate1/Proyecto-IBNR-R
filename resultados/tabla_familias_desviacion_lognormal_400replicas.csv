@@ -1,0 +1,11 @@
+Familia,Método con mejor promedio,Desviación estándar promedio,Método con más escenarios ganados,Frecuencia ganadora
+Sin contaminación,Mediana,524.27,Mediana,1/1
+Contaminación del 5%,Mediana,1241.13,Mediana,6/9
+Contaminación del 10%,Mediana,1566.18,Mediana,9/9
+Contaminación del 20%,Mediana,2005.52,Mediana,7/9
+Outliers ×2,Mediana,675.67,Mediana,7/9
+Outliers ×5,Mediana,1444.0,Mediana,7/9
+Outliers ×10,Mediana,2693.15,Mediana,8/9
+Contaminación temprana,Mediana,1464.52,Mediana,7/9
+Contaminación tardía,Mediana,1650.57,Mediana,7/9
+Contaminación aleatoria,Mediana,1697.73,Mediana,8/9

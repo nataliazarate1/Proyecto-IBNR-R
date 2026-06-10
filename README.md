@@ -1,48 +1,82 @@
-# Evaluacion del Chain-Ladder clasico y robusto bajo contaminacion
+# Evaluación del método Chain-Ladder clásico y variantes robustas para estimar el IBNR
 
-Este repositorio contiene una implementacion reproducible en Python para comparar el metodo Chain-Ladder clasico con tres variantes robustas en la estimacion del IBNR bajo escenarios simulados con valores atipicos controlados.
+Este repositorio contiene el trabajo final sobre estimación del IBNR bajo datos contaminados. El proyecto compara el método Chain-Ladder clásico con tres variantes robustas mediante simulación controlada, validación previa del simulador y análisis de resultados por escenario y por familias de escenarios.
 
-## Estructura
+## Estructura del proyecto
 
-- `notebooks/ibnr_chain_ladder_robusto.ipynb`: notebook principal con explicacion metodologica, ejecucion del experimento y analisis.
-- `scripts/generate_notebook.py`: generador del notebook en formato `.ipynb`.
-- `scripts/run_experiment.py`: ejecucion por linea de comandos con exportacion de resultados a CSV.
-- `src/ibnr_project/config.py`: configuraciones y escenarios.
-- `src/ibnr_project/simulation.py`: generacion del triangulo, mascara observada y contaminacion.
-- `src/ibnr_project/experiment.py`: motor Monte Carlo y resumen global.
-- `src/ibnr_project/diagnostics.py`: diagnosticos de estructura, convergencia y dominancia de metodos.
-- `src/ibnr_project/methods.py`: estimadores Chain-Ladder clasico y robustos.
-- `src/ibnr_project/evaluation.py`: metricas de desempeno y tablas resumen.
-- `src/ibnr_project/validation.py`: pruebas de coherencia estadistica y logica.
+- `cuadernos/`
+  - `estudio_ibnr_chain_ladder_robusto.ipynb`: cuaderno principal del estudio.
+  - `validacion_simulador_ibnr.ipynb`: cuaderno separado de validación del simulador.
+- `fuente/proyecto_ibnr/`
+  - `configuracion.py`: configuración base y definición de escenarios.
+  - `simulacion.py`: generación del triángulo incremental, acumulado y región observada.
+  - `metodos.py`: implementación del método clásico, mediana, truncada y ponderado robusto.
+  - `experimento.py`: ejecución Monte Carlo del estudio.
+  - `evaluacion.py`: métricas, clasificaciones y resúmenes por familias.
+  - `diagnosticos.py`: diagnósticos complementarios y tablas de apoyo.
+  - `validacion.py`: verificaciones previas del simulador.
+- `guiones/`
+  - `ejecutar_experimento.py`: corre el experimento y exporta resultados.
+  - `generar_cuaderno.py`: normaliza o limpia los cuadernos.
+  - `construir_recursos_presentacion.py`: genera las figuras usadas en la presentación.
+- `resultados/`: salidas del estudio en formato CSV.
+- `presentacion/`
+  - `sustentacion_ibnr_usta.tex`: presentación en Beamer.
+  - `figuras/`: recursos gráficos de la sustentación.
+- `recursos/`: material gráfico base del proyecto.
 
-## Instalacion
+## Instalación
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Ejecucion
+## Ejecución principal
 
-1. Abre `notebooks/ibnr_chain_ladder_robusto.ipynb`.
-2. Ejecuta las celdas en orden.
-3. Si deseas una corrida rapida, reduce `N_REPLICAS` en la seccion de configuracion.
-
-## Ejecucion por script
+Para correr el caso base Gamma con 1000 réplicas:
 
 ```bash
-python scripts/run_experiment.py --replicas 1000 --distribution gamma
+python guiones/ejecutar_experimento.py --replicas 1000 --distribucion gamma
+```
+
+Para la sensibilidad Lognormal con 400 réplicas:
+
+```bash
+python guiones/ejecutar_experimento.py --replicas 400 --distribucion lognormal
 ```
 
 ## Resultados exportados
 
-La corrida principal exporta, entre otros, los siguientes archivos a `results/`:
+La corrida genera archivos como los siguientes en `resultados/`:
 
-- `metrics_<distribucion>_<replicas>rep.csv`
-- `ranking_<distribucion>_<replicas>rep.csv`
-- `comparisons_vs_classical_<distribucion>_<replicas>rep.csv`
-- `method_dominance_<distribucion>_<replicas>rep.csv`
-- `global_summary_<distribucion>_<replicas>rep.csv`
+- `resultados_crudos_gamma_1000replicas.csv`
+- `metricas_gamma_1000replicas.csv`
+- `clasificacion_gamma_1000replicas.csv`
+- `comparaciones_con_clasico_gamma_1000replicas.csv`
+- `dominancia_metodos_gamma_1000replicas.csv`
+- `resumen_global_gamma_1000replicas.csv`
+- `resultados_familia_gamma_1000replicas.csv`
+- `resumen_desviacion_robusta_gamma_1000replicas.csv`
+- `evaluacion_hipotesis_gamma_1000replicas.csv`
 
-## Nota metodologica
+## Recursos de presentación
 
-La simulacion base usa `numpy.random.Generator.gamma` y `numpy.random.Generator.lognormal`. Se evita `scipy` como dependencia obligatoria para simplificar la reproducibilidad del repositorio sin sacrificar el modelo probabilistico propuesto.
+Para regenerar las figuras de la sustentación:
+
+```bash
+python guiones/construir_recursos_presentacion.py
+```
+
+Las imágenes se guardan directamente en `presentacion/figuras/`.
+
+## Cuadernos
+
+Si deseas dejar un cuaderno limpio, sin salidas:
+
+```bash
+python guiones/generar_cuaderno.py --limpiar-salidas
+```
+
+## Nota metodológica
+
+La simulación base utiliza una distribución Gamma y la sensibilidad se evalúa con una distribución Lognormal. El diseño introduce contaminación positiva y controlada solo en la región observada del triángulo, de modo que el IBNR real de la zona futura permanezca intacto y sirva como referencia para medir error y estabilidad.

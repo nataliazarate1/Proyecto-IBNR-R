@@ -1,0 +1,4 @@
+metodo_robusto,escenarios_con_menor_sd_que_clasico,total_escenarios_contaminados,proporcion_favorable,etiqueta_metodo_robusto
+mediana,22,27,0.8148148148148148,Mediana
+truncada,0,27,0.0,Media truncada
+ponderado,14,27,0.5185185185185185,Ponderado robusto

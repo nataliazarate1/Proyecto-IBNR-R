@@ -1,0 +1,11 @@
+Escenario,RMSE del clásico,Proporción,Magnitud,Ubicación
+5% · ×2 · Tardía,662.4431508005516,0.05,2.0,tardia
+5% · ×2 · Temprana,636.7035557109715,0.05,2.0,temprana
+10% · ×2 · Aleatoria,768.9754478874817,0.1,2.0,aleatoria
+10% · ×2 · Tardía,712.0645809179009,0.1,2.0,tardia
+10% · ×2 · Temprana,719.8014625714594,0.1,2.0,temprana
+10% · ×5 · Temprana,1648.7016729566649,0.1,5.0,temprana
+10% · ×10 · Temprana,2435.200457092276,0.1,10.0,temprana
+20% · ×2 · Tardía,889.6182902154546,0.2,2.0,tardia
+20% · ×2 · Temprana,800.980084133242,0.2,2.0,temprana
+20% · ×5 · Temprana,1895.266164989764,0.2,5.0,temprana

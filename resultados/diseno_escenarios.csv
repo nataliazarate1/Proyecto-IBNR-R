@@ -1,0 +1,4 @@
+componente,niveles,interpretación
+Proporción,"0%, 5%, 10%, 20%",Determina qué fracción de las celdas observadas es alterada.
+Magnitud,"x1, x2, x5, x10",Determina cuán extremo se vuelve cada valor atípico seleccionado.
+Ubicación,"ninguna, aleatoria, temprana, tardia","Determina si la contaminación ocurre al inicio, al final o de forma dispersa en el desarrollo."

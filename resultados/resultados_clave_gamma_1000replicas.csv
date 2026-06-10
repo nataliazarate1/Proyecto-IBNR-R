@@ -1,0 +1,5 @@
+hallazgo,resultado
+Método ganador en el escenario base,clasico
+Escenarios contaminados ganados por la mediana,17
+Escenarios contaminados ganados por el método clásico,10
+Método con menor RMSE promedio global,mediana
